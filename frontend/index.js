@@ -41,7 +41,7 @@ async function moduleProject4() {
         .textContent = `${data.current.apparent_temperature}°`
       document.querySelector('#todayDescription')
         .textContent = descriptions.find(d => d[0] === data.current.weather_description)[1]
-      document.querySelector('todayStats div:nth-child(1)')
+      document.querySelector('#todayStats div:nth-child(1)')
         .textContent = `${data.current.temperature_min}°/${data.current.temperature_max}°`
       document.querySelector('#todayStats div:nth-child(2)')
         .textContent = `Precipitation: ${data.current.precipitation_probability * 100}%`
@@ -59,19 +59,21 @@ async function moduleProject4() {
         let precipit = card.children[3]
 
         weekDay.textContent = getWeekDay(day.date)
-        apparent.textContent = descriptions.find(d => d[0] === day.weather_description)
+        apparent.textContent = descriptions.find(d => d[0] === day.weather_description)[1]
         minMax.textContent = `${day.temperature_min}°/${day.temperature_max}°`
         precipit.textContent = `Precipitation: ${day.precipitation_probability * 100}%`
 
       })
-      document.querySelector('#location').firstElementChild.textContent = data.city.location
+      document.querySelector('#location').firstElementChild.textContent = data.location.city
     } catch (err) {
       console.log('😔 Promise rejected with an err.message -->', err.message)
     }
   })
-function getWeekDay(date) {
-  return date
-}
+  function getWeekDay(date) {
+    const parsedDate = new Date(date)
+    return parsedDate.toLocaleDateString('en-US', { weekday: 'long' })
+  }
+
 
 
   // 👆 WORK WORK ABOVE THIS LINE 👆
