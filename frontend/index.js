@@ -16,69 +16,72 @@ async function moduleProject4() {
   ]
 
   // 👉 Tasks 1 - 5 go here
-  document.querySelector('#weatherWidget').style.display = 'none' // sets an inline style that overrides default settings and hides the widget container
-  document.querySelector('#citySelect').addEventListener('change', async evt => {
-    console.log('selection changed')
+
+  const weatherWidget = document.getElementById('weatherWidget');
+  weatherWidget.style.display = 'none'; // sets an inline style that overrides default settings and hides the widget container
+  
+  const citySelect = document.getElementById('citySelect');
+  citySelect.addEventListener('change', async (evt) => {
+    console.log('selection changed');
     try {
-      document.querySelector('#citySelect').setAttribute('disabled', 'disabled')
-      document.querySelector('#weatherWidget').style.display = 'none'
-      document.querySelector('.info').textContent = 'Fetching weather data...'
+      citySelect.setAttribute('disabled', 'disabled');
+      weatherWidget.style.display = 'none';
+      document.querySelector('.info').textContent = 'Fetching weather data...';
 
-      console.log(evt.target.value)
-      let city = evt.target.value
-      let url = `http://localhost:3003/api/weather?city=${city}`
+      console.log(evt.target.value);
+      let city = evt.target.value;
+      let url = `http://localhost:3003/api/weather?city=${city}`;
+      console.log(`Request URL: ${url}`);
 
 
-      const res = await axios.get(url)
+      const res = await axios.get(url);
 
-      document.querySelector('#weatherWidget').style.display = 'block'
-      document.querySelector('.info').textContent = ''
-      evt.target.removeAttribute('disabled')
+      weatherWidget.style.display = 'block';
+      document.querySelector('.info').textContent = '';
+      citySelect.removeAttribute('disabled');
 
-      let { data } = res
+      let { data } = res;
+      console.log('API response data:', data)
 
-      document.querySelector('#apparentTemp div:nth-child(2)')
-        .textContent = `${data.current.apparent_temperature}°`
-      document.querySelector('#todayDescription')
-        .textContent = descriptions.find(d => d[0] === data.current.weather_description)[1]
-      document.querySelector('#todayStats div:nth-child(1)')
-        .textContent = `${data.current.temperature_min}°/${data.current.temperature_max}°`
-      document.querySelector('#todayStats div:nth-child(2)')
-        .textContent = `Precipitation: ${data.current.precipitation_probability * 100}%`
-      document.querySelector('#todayStats div:nth-child(3)')
-        .textContent = `Humidity: ${data.current.humidity}%`
-      document.querySelector('#todayStats div:nth-child(4)')
-        .textContent = `Wind: ${data.current.wind_speed}m/s`
+      document.querySelector('#apparentTemp div:nth-child(2)').textContent = `${data.current.apparent_temperature}°`;
+      document.querySelector('#todayDescription').textContent = descriptions.find(d => d[0] === data.current.weather_description)[1];
+      document.querySelector('#todayStats div:nth-child(1)').textContent = `${data.current.temperature_min}°/${data.current.temperature_max}°`;
+      document.querySelector('#todayStats div:nth-child(2)').textContent = `Precipitation: ${data.current.precipitation_probability * 100}%`;
+      document.querySelector('#todayStats div:nth-child(3)').textContent = `Humidity: ${data.current.humidity}%`;
+      document.querySelector('#todayStats div:nth-child(4)').textContent = `Wind: ${data.current.wind_speed}m/s`;
 
       data.forecast.daily.forEach((day, idx) => {
-        let card = document.querySelectorAll('.next-day')[idx]
+        let card = document.querySelectorAll('.next-day')[idx];
 
-        let weekDay = card.children[0]
-        let apparent = card.children[1]
-        let minMax = card.children[2]
-        let precipit = card.children[3]
+        let weekDay = card.children[0];
+        let apparent = card.children[1];
+        let minMax = card.children[2];
+        let precipit = card.children[3];
 
-        weekDay.textContent = getWeekDay(day.date)
-        apparent.textContent = descriptions.find(d => d[0] === day.weather_description)[1]
-        minMax.textContent = `${day.temperature_min}°/${day.temperature_max}°`
-        precipit.textContent = `Precipitation: ${day.precipitation_probability * 100}%`
+        weekDay.textContent = getWeekDay(day.date);
+        console.log(`Day ${idx + 1}: Date - ${day.date}, Weekday - ${weekDay.textContent}`)
+        
+        apparent.textContent = descriptions.find(d => d[0] === day.weather_description)[1];
+        minMax.textContent = `${day.temperature_min}°/${day.temperature_max}°`;
+        precipit.textContent = `Precipitation: ${day.precipitation_probability * 100}%`;
 
-      })
-      document.querySelector('#location').firstElementChild.textContent = data.location.city
+      });
+      document.querySelector('#location').firstElementChild.textContent = data.location.city;
     } catch (err) {
-      console.log('😔 Promise rejected with an err.message -->', err.message)
+      console.log('😔 Promise rejected with an err.message -->', err.message);
     }
-  })
+  });
   function getWeekDay(date) {
-    const parsedDate = new Date(date)
-    return parsedDate.toLocaleDateString('en-US', { weekday: 'long' })
+    const parsedDate = new Date(date);
+    return parsedDate.toLocaleDateString('en-US', { weekday: 'long' });
   }
+}
 
 
 
   // 👆 WORK WORK ABOVE THIS LINE 👆
 
-}
+
 
 // ❗ DO NOT CHANGE THE CODE  BELOW
 // ❗ DO NOT CHANGE THE CODE  BELOW
