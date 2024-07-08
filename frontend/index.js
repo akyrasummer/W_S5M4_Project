@@ -34,7 +34,7 @@ async function moduleProject4() {
       console.log(`Request URL: ${url}`);
 
 
-      const res = await axios.get(url);
+      const res = await axios.get(url); // axios call line
 
       weatherWidget.style.display = 'block';
       document.querySelector('.info').textContent = '';
